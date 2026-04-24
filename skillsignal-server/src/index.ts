@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 5000
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://skillsignal-one.vercel.app/', // add after you get Vercel URL
+    'https://skillsignal-one.vercel.app', // add after you get Vercel URL
   ],
   credentials: true,
 }))
