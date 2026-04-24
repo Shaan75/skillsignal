@@ -3,7 +3,7 @@ import { AuthRequest } from '../middleware/authMiddleware'
 import Resume from '../models/Resume'
 import { analyzeResume, generateCoverLetter, generateInterviewQuestions, matchJobDescription, generateLinkedInBio, rewriteResume, generateSkillGap, generateATSScore, roastResume } from '../services/geminiService'
 import fs from 'fs'
-
+import path from 'path'
 // @POST /api/resume/upload
 export const uploadResume = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
@@ -13,7 +13,8 @@ export const uploadResume = async (req: AuthRequest, res: Response): Promise<voi
     }
 
     const pdfParse = (await import('pdf-parse')).default
-    const fileBuffer = fs.readFileSync(req.file.path)
+    const absolutePath = path.join(process.cwd(), req.file.path)
+    const fileBuffer = fs.readFileSync(absolutePath)
     const pdfData = await pdfParse(fileBuffer)
     const extractedText = pdfData.text
 
@@ -82,8 +83,10 @@ export const deleteResume = async (req: AuthRequest, res: Response): Promise<voi
       return
     }
 
-    if (fs.existsSync(resume.fileUrl)) {
-      fs.unlinkSync(resume.fileUrl)
+    const filePath = path.join(process.cwd(), resume.fileUrl)
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath)
     }
 
     await resume.deleteOne()

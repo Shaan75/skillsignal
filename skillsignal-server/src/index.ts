@@ -4,11 +4,19 @@ import dotenv from 'dotenv'
 import connectDB from './config/db'
 import authRoutes from './routes/authRoutes'
 import resumeRoutes from './routes/resumeRoutes'
+import fs from 'fs'
+import path from 'path'
 
 dotenv.config()
 
 const app = express()
 const PORT = process.env.PORT || 5000
+const uploadDir = path.join(process.cwd(), 'uploads')
+
+// Create upload directory if it doesn't exist
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true })
+}
 
 // Middleware
 app.use(cors({
