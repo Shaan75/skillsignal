@@ -7,7 +7,7 @@ import {
   Cpu, BarChart3, Eye, Target, Shield, ArrowUp 
 } from 'lucide-react'
 
-// --- EXTRAORDINARY HOVER COMPONENT ---
+// --- EXTRAORDINARY HOVER COMPONENT (FIXED FOR MOBILE CLIPPING) ---
 const MenuLink = ({ title, href, onClick, isSmall = false }: { title: string, href: string, onClick: () => void, isSmall?: boolean }) => {
   return (
     <motion.a
@@ -15,7 +15,12 @@ const MenuLink = ({ title, href, onClick, isSmall = false }: { title: string, hr
       onClick={onClick}
       initial="initial"
       whileHover="hover"
-      className={`relative group cursor-pointer flex items-center justify-center overflow-hidden py-2 px-4 w-full ${isSmall ? 'text-xl font-bold text-slate-500' : 'text-4xl md:text-6xl font-[1000] text-white uppercase tracking-tighter italic'}`}
+      // Removed overflow-hidden here to prevent italic text from clipping on edges
+      className={`relative group cursor-pointer flex items-center justify-center py-2 px-6 w-full transition-all ${
+        isSmall 
+          ? 'text-lg md:text-xl font-bold text-slate-500' 
+          : 'text-[clamp(28px,8vw,60px)] font-[1000] text-white uppercase tracking-tighter italic'
+      }`}
     >
       {/* Background Spotlight Glow */}
       <motion.div 
@@ -27,7 +32,7 @@ const MenuLink = ({ title, href, onClick, isSmall = false }: { title: string, hr
       />
 
       {/* Text Animation: Letter Stagger */}
-      <div className="relative flex overflow-hidden">
+      <div className="relative flex">
         {title.split("").map((char, i) => (
           <motion.span
             key={i}
@@ -137,6 +142,7 @@ export default function Home() {
               <Link to="/register" className="bg-white text-black px-6 py-2.5 rounded-xl font-black transition-all hover:scale-105 active:scale-95 shadow-xl">Get Started</Link>
             </div>
 
+            {/* Mobile Toggle Button */}
             <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-3 text-white px-4 relative z-[2001]">
               {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -156,7 +162,7 @@ export default function Home() {
           >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(124,58,237,0.1),transparent_70%)] pointer-events-none" />
             
-            <div className="flex flex-col items-center gap-6 relative z-10 w-full px-10">
+            <div className="flex flex-col items-center gap-4 md:gap-8 relative z-10 w-full px-6">
               <MenuLink title="Diagnostics" href="#diagnostics" onClick={() => setMobileMenuOpen(false)} />
               <MenuLink title="Heatmap" href="#gaze" onClick={() => setMobileMenuOpen(false)} />
               
@@ -164,10 +170,16 @@ export default function Home() {
               
               <MenuLink title="Sign In" href="/login" onClick={() => setMobileMenuOpen(false)} isSmall />
               
-              <Link to="/register" className="mt-8 bg-white text-black px-12 py-5 rounded-2xl font-[1000] text-2xl shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 transition-all uppercase tracking-tighter" onClick={() => setMobileMenuOpen(false)}>Get Started</Link>
+              <Link 
+                to="/register" 
+                className="mt-8 bg-white text-black px-12 py-5 rounded-2xl font-[1000] text-2xl shadow-[0_0_50px_rgba(255,255,255,0.2)] hover:scale-105 active:scale-95 transition-all uppercase tracking-tighter" 
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Get Started
+              </Link>
             </div>
 
-            {/* Mobile Drawer Bottom Branding */}
+            {/* Mobile Drawer Small Branding */}
             <div className="absolute bottom-12 flex flex-col items-center gap-3 opacity-30 select-none">
                <div className="flex items-center gap-2">
                   <div className="w-5 h-5 rounded bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center">
@@ -186,7 +198,7 @@ export default function Home() {
       </AnimatePresence>
 
       {/* --- HERO SECTION --- */}
-      <section className="relative h-screen flex flex-col items-center justify-center px-6 pt-20 border-b border-white/5">
+      <section className="relative min-h-screen flex flex-col items-center justify-center px-6 pt-20 border-b border-white/5">
         <div className="max-w-5xl mx-auto text-center flex flex-col items-center z-10">
           <Reveal>
             <div className="inline-flex items-center gap-3 px-4 py-1.5 rounded-full mb-8 text-[10px] font-black uppercase tracking-[0.4em] bg-purple-500/10 border border-purple-500/20 text-purple-400 backdrop-blur-xl">
@@ -195,7 +207,7 @@ export default function Home() {
           </Reveal>
 
           <Reveal delay={0.1}>
-            <h1 className="text-[clamp(40px,9vw,110px)] font-[1000] leading-[0.85] tracking-[-0.05em] text-white mb-8">
+            <h1 className="text-[clamp(36px,9vw,110px)] font-[1000] leading-[0.85] tracking-[-0.05em] text-white mb-8">
               Know Your Signal<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-white to-cyan-400 animate-gradient-x px-2 italic">Land Your Role.</span>
             </h1>
@@ -313,16 +325,16 @@ export default function Home() {
             </Reveal>
           </div>
           
-          <div className="lg:w-1/2 relative h-[550px] w-full bg-[#08080a] border border-white/5 rounded-[4rem] p-12 overflow-hidden shadow-2xl">
+          <div className="lg:w-1/2 relative h-[350px] md:h-[550px] w-full bg-[#08080a] border border-white/5 rounded-[3rem] md:rounded-[4rem] p-8 md:p-12 overflow-hidden shadow-2xl">
             <Eye size={300} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white/[0.01]" />
             <div className="relative z-10 space-y-6 opacity-30">
               <div className="h-2 w-full bg-white/10 rounded-full" />
               <div className="h-2 w-3/4 bg-white/10 rounded-full" />
               
-              <div className="relative h-28 w-full flex items-center justify-center">
+              <div className="relative h-20 md:h-28 w-full flex items-center justify-center">
                  <motion.div animate={{ scale: [1, 2], opacity: [0.5, 0] }} transition={{ duration: 2, repeat: Infinity }} className="absolute w-24 h-24 border border-emerald-500/50 rounded-full" />
-                 <div className="h-20 w-3/4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center relative z-20 backdrop-blur-md">
-                   <span className="text-emerald-500 font-black text-[10px] uppercase tracking-[0.4em] italic">Focus: Achievement Node</span>
+                 <div className="h-16 md:h-20 w-3/4 bg-emerald-500/10 border border-emerald-500/20 rounded-2xl flex items-center justify-center relative z-20 backdrop-blur-md">
+                   <span className="text-emerald-500 font-black text-[9px] md:text-[10px] uppercase tracking-[0.4em] italic text-center px-4">Focus: Achievement Node</span>
                  </div>
               </div>
 
@@ -339,18 +351,18 @@ export default function Home() {
           <Reveal>
              <div className="mb-24 text-center">
                 <h2 className="text-5xl md:text-9xl font-black text-white tracking-tighter leading-[0.8] mb-8 italic">Clinical<br /><span className="text-slate-800">Diagnostics.</span></h2>
-                <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-xs opacity-50">Four Layer Semantic Analysis</p>
+                <p className="text-slate-500 font-black uppercase tracking-[0.4em] text-[10px] md:text-xs opacity-50">Four Layer Semantic Analysis</p>
              </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
              {[
                { icon: <Cpu />, title: 'Tone Analysis', desc: 'Verifying if your language matches executive-level confidence.' },
                { icon: <Shield />, title: 'ATS Parsing', desc: 'Simulating 40+ systems to ensure 100% human-readability.' },
                { icon: <Target />, title: 'Skill Gaps', desc: 'Detecting the specific nodes missing for your target salary.' },
                { icon: <TrendingUp />, title: 'Impact AI', desc: 'Quantifying passive statements into data-driven milestones.' }
              ].map((node, i) => (
-               <motion.div key={i} whileHover={{ y: -8 }} className="p-10 bg-white/[0.02] border border-white/5 rounded-[3rem] group">
+               <motion.div key={i} whileHover={{ y: -8 }} className="p-8 md:p-10 bg-white/[0.02] border border-white/5 rounded-[2.5rem] md:rounded-[3rem] group">
                   <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-purple-400 transition-colors mb-8">
                      {node.icon}
                   </div>
@@ -363,19 +375,19 @@ export default function Home() {
       </section>
 
       {/* --- CINEMATIC FINAL CTA --- */}
-      <section id="velocity" className="relative py-60 px-6 overflow-hidden">
+      <section id="velocity" className="relative py-40 md:py-60 px-6 overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[500px] bg-purple-600/5 blur-[150px] rounded-full pointer-events-none opacity-50" />
         <div className="max-w-5xl mx-auto text-center relative z-10 flex flex-col items-center">
           <Reveal>
              <div className="flex flex-col items-center gap-4">
-                <h2 className="text-7xl md:text-[140px] font-black text-white leading-[0.75] tracking-tighter mb-4 italic select-none">
+                <h2 className="text-6xl md:text-[140px] font-black text-white leading-[0.75] tracking-tighter mb-4 italic select-none">
                   Signal 
                 </h2>
                 <div className="relative mb-12">
-                   <span className="text-7xl md:text-[140px] font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-b from-slate-400 to-slate-800 opacity-60">Unlocked.</span>
+                   <span className="text-6xl md:text-[140px] font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-b from-slate-400 to-slate-800 opacity-60">Unlocked.</span>
                    <div className="absolute inset-0 bg-purple-500/20 blur-[60px] rounded-full animate-pulse" />
                 </div>
-                <Link to="/register" className="group relative h-24 px-16 inline-flex items-center gap-6 rounded-full bg-white text-black font-[1000] text-2xl hover:scale-105 active:scale-95 transition-all shadow-[0_0_100px_rgba(255,255,255,0.3)]">
+                <Link to="/register" className="group relative h-20 md:h-24 px-10 md:px-16 inline-flex items-center gap-6 rounded-full bg-white text-black font-[1000] text-xl md:text-2xl hover:scale-105 active:scale-95 transition-all shadow-2xl">
                   <span className="uppercase tracking-[0.1em]">Deploy Now</span>
                   <Sparkles size={28} className="group-hover:rotate-12 transition-transform duration-500" />
                 </Link>
@@ -392,12 +404,12 @@ export default function Home() {
           {/* Left Side: Brand & Copyright */}
           <div className="flex flex-col items-center md:items-start gap-4">
             <div onClick={scrollToTop} className="flex items-center gap-3 cursor-pointer group">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg shadow-purple-500/20">
+              <div className="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-purple-600 to-cyan-500 flex items-center justify-center group-hover:rotate-12 transition-transform shadow-lg shadow-purple-500/20">
                 <Zap size={24} className="text-white fill-current" />
               </div>
-              <span className="font-black text-3xl tracking-tighter text-white uppercase italic">SkillSignal</span>
+              <span className="font-black text-2xl md:text-3xl tracking-tighter text-white uppercase italic">SkillSignal</span>
             </div>
-            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] ml-1">
+            <p className="text-slate-600 text-[10px] font-bold uppercase tracking-[0.3em] ml-1 text-center md:text-left">
               © 2026 SkillSignal. All Rights Reserved.
             </p>
           </div>
@@ -407,7 +419,7 @@ export default function Home() {
             <span className="text-slate-500 text-[9px] font-black uppercase tracking-[0.5em] opacity-40">
               Engineered By
             </span>
-            <p className="text-white font-[1000] text-lg uppercase tracking-[0.1em] italic group cursor-default">
+            <p className="text-white font-[1000] text-base md:text-lg uppercase tracking-[0.1em] italic group cursor-default">
               Shaunak <span className="text-purple-500 group-hover:text-cyan-400 transition-colors">Sikdar</span>
             </p>
           </div>
@@ -425,7 +437,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
-            className="fixed bottom-6 right-6 md:bottom-10 md:right-10 z-[3000] w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group"
+            className="fixed bottom-6 right-6 z-[3000] w-12 h-12 bg-white text-black rounded-full flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-all group"
           >
             <ArrowUp size={20} strokeWidth={3} className="group-hover:-translate-y-1 transition-transform" />
           </motion.button>
