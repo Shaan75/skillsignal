@@ -47,9 +47,9 @@ export default function ResumeRewriter() {
   }
 
   const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20 } }
-  }
+  hidden: { y: 20, opacity: 0 },
+  visible: { y: 0, opacity: 1, transition: { type: 'spring' as const, stiffness: 100, damping: 15 } }
+}
 
   return (
     <div className="min-h-screen flex bg-[#030305] text-slate-200 font-sans selection:bg-purple-500/30">
